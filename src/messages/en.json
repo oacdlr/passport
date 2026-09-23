@@ -1,0 +1,196 @@
+{
+  "app": {
+    "name": "Coffee Passport",
+    "nav": {
+      "library": "Library",
+      "tasting": "Tasting",
+      "drafts": "Drafts",
+      "academy": "Academy",
+      "users": "Users"
+    },
+    "userMenu": {
+      "signOut": "Sign out",
+      "role": "Role"
+    },
+    "language": "Language",
+    "comingSoon": "Coming soon",
+    "comingSoonBody": "This module arrives in a later phase of the project."
+  },
+  "auth": {
+    "title": "Coffee Passport",
+    "subtitle": "The team's coffee record.",
+    "emailLabel": "Your team email",
+    "emailPlaceholder": "name@coffeeshop.com",
+    "submit": "Send me a sign-in link",
+    "submitting": "Sending…",
+    "closedTeam": "Team members only. If you don't have an account, ask an admin to invite you.",
+    "checkEmail": "Check your email",
+    "checkEmailBody": "We sent a sign-in link to {email}. Open it on this same device.",
+    "backToLogin": "Back",
+    "errors": {
+      "invalidEmail": "Enter a valid email address.",
+      "magicLinkFailed": "We couldn't send the link. Check the address or ask an admin for an invite.",
+      "link": "That link no longer works. Request a new one."
+    }
+  },
+  "library": {
+    "title": "Library",
+    "count": "{count, plural, =0 {No coffees catalogued yet} one {# coffee catalogued by the team} other {# coffees catalogued by the team}}",
+    "search": "Search by name, country or producer…",
+    "addCoffee": "+ Add coffee",
+    "importCsv": "Import CSV",
+    "viewProfile": "View profile",
+    "empty": "No coffees match.",
+    "emptyAll": "The Library is empty. Add the first coffee or import a CSV.",
+    "clearFilters": "Clear filters",
+    "filters": {
+      "origin": "Origin",
+      "roast": "Roast",
+      "process": "Process",
+      "kind": "Single origin / Blend",
+      "all": "All"
+    },
+    "fields": {
+      "name": "Coffee name",
+      "kind": "Type",
+      "origins": "Origin",
+      "country": "Country",
+      "region": "Region",
+      "producer": "Producer",
+      "farm": "Farm",
+      "altitude": "Altitude (masl)",
+      "roast": "Roast level",
+      "process": "Process",
+      "body": "Body",
+      "acidity": "Acidity",
+      "story": "Story / description",
+      "tastingNotes": "Tasting notes",
+      "complementaryFlavors": "Complementary flavours",
+      "extra": "Extra data",
+      "photo": "Bag photo"
+    },
+    "kind": {
+      "single_origin": "Single origin",
+      "blend": "Blend"
+    },
+    "roast": {
+      "light": "Light roast",
+      "medium_light": "Medium-light roast",
+      "medium": "Medium roast",
+      "medium_dark": "Medium-dark roast",
+      "dark": "Dark roast"
+    },
+    "process": {
+      "washed": "Washed",
+      "honey": "Honey",
+      "natural": "Natural",
+      "anaerobic": "Anaerobic",
+      "other": "Other"
+    },
+    "scale": {
+      "body": "Light — Full",
+      "acidity": "Low — High"
+    },
+    "form": {
+      "newTitle": "Add coffee",
+      "editTitle": "Edit coffee",
+      "save": "Save coffee",
+      "saving": "Saving…",
+      "cancel": "Cancel",
+      "addOrigin": "+ Add origin",
+      "removeOrigin": "Remove",
+      "tagsHint": "Type and press Enter to add.",
+      "extraHint": "Key / value pairs for anything the fields above don't cover.",
+      "addExtra": "+ Add entry",
+      "photoHint": "JPG, PNG or WebP. 5 MB max.",
+      "removePhoto": "Remove photo",
+      "notSet": "Not set"
+    },
+    "detail": {
+      "story": "Story",
+      "profile": "In the cup",
+      "notes": "Tasting notes",
+      "complementary": "Complementary flavours",
+      "extra": "Extra data",
+      "origins": "Origins",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirmTitle": "Delete this coffee?",
+      "deleteConfirmBody": "“{name}” will be removed from the Library for the whole team. This can't be undone.",
+      "deleteConfirm": "Yes, delete",
+      "back": "Back to Library",
+      "tastingsSoon": "Your tastings of this coffee will show up here."
+    },
+    "import": {
+      "title": "Import coffees",
+      "subtitle": "Upload a CSV and review the result before anything is saved.",
+      "downloadTemplate": "Download CSV template",
+      "chooseFile": "Choose CSV file",
+      "step1": "1. Upload",
+      "step2": "2. Review",
+      "step3": "3. Confirm",
+      "duplicates": "Coffees that already exist",
+      "duplicatesSkip": "Skip them",
+      "duplicatesUpdate": "Update them from the CSV",
+      "validRows": "{count, plural, one {# row ready} other {# rows ready}}",
+      "invalidRows": "{count, plural, one {# row with errors} other {# rows with errors}}",
+      "rowLabel": "Row {row}",
+      "confirm": "Import {count, plural, one {# coffee} other {# coffees}}",
+      "importing": "Importing…",
+      "startOver": "Start over",
+      "result": "Done: {inserted} new, {updated} updated, {skipped} skipped.",
+      "noValidRows": "No row in this file can be imported.",
+      "columnsTitle": "CSV columns",
+      "errors": {
+        "empty": "The file has no rows.",
+        "parse": "We couldn't read the file. Is it a valid CSV?",
+        "tooLarge": "The file is over 2 MB.",
+        "required": "“{field}” is required.",
+        "invalidKind": "Unknown type. Use “single origin” or “blend”.",
+        "invalidRoast": "Unknown roast level.",
+        "invalidProcess": "Unknown process.",
+        "invalidScale": "“{field}” must be a number from 1 to 5.",
+        "unknownCountry": "Unknown country: “{value}”.",
+        "noCountry": "At least one origin country is required.",
+        "duplicateInFile": "This coffee is repeated in the file.",
+        "singleOriginOneCountry": "A single origin has exactly one country. Use “blend” for more than one."
+      }
+    }
+  },
+  "admin": {
+    "title": "Users",
+    "subtitle": "{count, plural, one {# person on the team} other {# people on the team}}",
+    "invite": "Invite",
+    "inviteTitle": "Invite someone",
+    "inviteSent": "Invitation sent.",
+    "emailLabel": "Email",
+    "roleLabel": "Role",
+    "you": "you",
+    "never": "Hasn't signed in yet",
+    "roles": {
+      "admin": "Admin",
+      "editor": "Editor",
+      "viewer": "Viewer"
+    },
+    "roleHelp": {
+      "admin": "Everything, including user management and deleting coffees.",
+      "editor": "Creates, edits and imports Library and Academy. Cannot delete coffees.",
+      "viewer": "Read only."
+    },
+    "errors": {
+      "invalidEmail": "Enter a valid email address.",
+      "invalidRole": "Invalid role.",
+      "cannotDemoteSelf": "You can't remove your own admin role.",
+      "invitedButRoleFailed": "The invitation went out, but we couldn't set the role. Change it from the list."
+    }
+  },
+  "common": {
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "close": "Close",
+    "retry": "Retry",
+    "genericError": "Something went wrong. Try again.",
+    "notFoundTitle": "We couldn't find this page",
+    "notFoundBody": "The link may be broken, or the content no longer exists."
+  }
+}

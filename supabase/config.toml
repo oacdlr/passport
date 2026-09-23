@@ -1,0 +1,24 @@
+# Config del CLI de Supabase. El proyecto real se enlaza con:
+#   npx supabase link --project-ref <ref>
+project_id = "pasaporte-de-cafe"
+
+[db]
+major_version = 17
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
+[auth]
+# El equipo es cerrado: nadie se registra solo, sólo por invitación de un admin.
+enable_signup = false
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["http://localhost:3000/auth/callback"]
+
+[auth.email]
+enable_signup = false
+enable_confirmations = true
+
+[storage]
+enabled = true
+file_size_limit = "5MiB"

@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Design tokens — muestreados pixel a pixel de design/*.png.
+   Sólo light mode por requerimiento de producto (ver CLAUDE.md).
+   Nombres en español para no chocar con la paleta por defecto de Tailwind.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-bosque: #1f3b2f; /* topbar, títulos, tags activos, sliders */
+  --color-bosque-claro: #2c5142; /* hover del verde */
+  --color-crema: #f5f1e6; /* fondo de página */
+  --color-terracota: #c2694b; /* acción primaria, avatar */
+  --color-terracota-oscuro: #a9583d; /* hover */
+  --color-oro: #c7a26b; /* nav activa, tarjetas de artículo */
+  --color-salvia: #e6f0e8; /* badge single origin */
+  --color-arena: #f1e4d1; /* badge mezcla */
+  --color-marfil: #f0e9d7; /* placeholder de foto */
+  --color-borde: #e2d9c8; /* bordes y divisores */
+  --color-tinta: #1f1f1c; /* texto principal sobre claro */
+  --color-tinta-suave: #65615a; /* texto secundario, labels */
+
+  --font-display: var(--font-fraunces); /* títulos */
+  --font-sans: var(--font-work-sans); /* cuerpo */
+
+  --radius-card: 0.875rem;
+}
+
+@layer base {
+  html {
+    color-scheme: light only;
+  }
+
+  body {
+    background-color: var(--color-crema);
+    color: var(--color-tinta);
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display), Georgia, serif;
+  }
+
+  /* Foco visible y consistente en toda la app (teclado y lectores de pantalla). */
+  :focus-visible {
+    outline: 2px solid var(--color-bosque);
+    outline-offset: 2px;
+  }
+}

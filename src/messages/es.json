@@ -1,0 +1,196 @@
+{
+  "app": {
+    "name": "Pasaporte de Café",
+    "nav": {
+      "library": "Biblioteca",
+      "tasting": "Degustación",
+      "drafts": "Drafts",
+      "academy": "Academy",
+      "users": "Usuarios"
+    },
+    "userMenu": {
+      "signOut": "Cerrar sesión",
+      "role": "Rol"
+    },
+    "language": "Idioma",
+    "comingSoon": "Muy pronto",
+    "comingSoonBody": "Este módulo llega en una fase posterior del proyecto."
+  },
+  "auth": {
+    "title": "Pasaporte de Café",
+    "subtitle": "El registro de café del equipo.",
+    "emailLabel": "Tu correo del equipo",
+    "emailPlaceholder": "nombre@cafeteria.com",
+    "submit": "Enviar enlace de acceso",
+    "submitting": "Enviando…",
+    "closedTeam": "Acceso sólo para el equipo. Si no tienes cuenta, pídele a un admin que te invite.",
+    "checkEmail": "Revisa tu correo",
+    "checkEmailBody": "Te enviamos un enlace de acceso a {email}. Ábrelo desde este mismo dispositivo.",
+    "backToLogin": "Volver",
+    "errors": {
+      "invalidEmail": "Escribe un correo válido.",
+      "magicLinkFailed": "No pudimos enviar el enlace. Revisa el correo o pide una invitación a un admin.",
+      "link": "Ese enlace ya no sirve. Pide uno nuevo."
+    }
+  },
+  "library": {
+    "title": "Biblioteca",
+    "count": "{count, plural, =0 {Todavía no hay cafés catalogados} one {# café catalogado por el equipo} other {# cafés catalogados por el equipo}}",
+    "search": "Buscar por nombre, país o productor…",
+    "addCoffee": "+ Agregar café",
+    "importCsv": "Importar CSV",
+    "viewProfile": "Ver perfil",
+    "empty": "No hay cafés que coincidan.",
+    "emptyAll": "La Biblioteca está vacía. Agrega el primer café o importa un CSV.",
+    "clearFilters": "Quitar filtros",
+    "filters": {
+      "origin": "Origen",
+      "roast": "Tueste",
+      "process": "Proceso",
+      "kind": "Single origin / Mezcla",
+      "all": "Todos"
+    },
+    "fields": {
+      "name": "Nombre del café",
+      "kind": "Tipo",
+      "origins": "Origen",
+      "country": "País",
+      "region": "Región",
+      "producer": "Productor",
+      "farm": "Finca",
+      "altitude": "Altitud (msnm)",
+      "roast": "Nivel de tueste",
+      "process": "Procesamiento",
+      "body": "Cuerpo",
+      "acidity": "Acidez",
+      "story": "Historia / descripción",
+      "tastingNotes": "Notas de cata",
+      "complementaryFlavors": "Sabores complementarios",
+      "extra": "Datos extra",
+      "photo": "Foto de la bolsa"
+    },
+    "kind": {
+      "single_origin": "Single origin",
+      "blend": "Mezcla"
+    },
+    "roast": {
+      "light": "Tueste claro",
+      "medium_light": "Tueste medio-claro",
+      "medium": "Tueste medio",
+      "medium_dark": "Tueste medio-oscuro",
+      "dark": "Tueste oscuro"
+    },
+    "process": {
+      "washed": "Lavado",
+      "honey": "Honey",
+      "natural": "Natural",
+      "anaerobic": "Anaeróbico",
+      "other": "Otro"
+    },
+    "scale": {
+      "body": "Ligero — Intenso",
+      "acidity": "Baja — Alta"
+    },
+    "form": {
+      "newTitle": "Agregar café",
+      "editTitle": "Editar café",
+      "save": "Guardar café",
+      "saving": "Guardando…",
+      "cancel": "Cancelar",
+      "addOrigin": "+ Añadir origen",
+      "removeOrigin": "Quitar",
+      "tagsHint": "Escribe y pulsa Enter para añadir.",
+      "extraHint": "Pares clave / valor para lo que no cabe en los campos de arriba.",
+      "addExtra": "+ Añadir dato",
+      "photoHint": "JPG, PNG o WebP. Máximo 5 MB.",
+      "removePhoto": "Quitar foto",
+      "notSet": "Sin definir"
+    },
+    "detail": {
+      "story": "Historia",
+      "profile": "Perfil en taza",
+      "notes": "Notas de cata",
+      "complementary": "Sabores complementarios",
+      "extra": "Datos extra",
+      "origins": "Orígenes",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "deleteConfirmTitle": "¿Eliminar este café?",
+      "deleteConfirmBody": "Se borra «{name}» de la Biblioteca para todo el equipo. No se puede deshacer.",
+      "deleteConfirm": "Sí, eliminar",
+      "back": "Volver a Biblioteca",
+      "tastingsSoon": "Tus degustaciones de este café aparecerán aquí."
+    },
+    "import": {
+      "title": "Importar cafés",
+      "subtitle": "Sube un CSV y revisa el resultado antes de guardar nada.",
+      "downloadTemplate": "Descargar plantilla CSV",
+      "chooseFile": "Elegir archivo CSV",
+      "step1": "1. Subir",
+      "step2": "2. Revisar",
+      "step3": "3. Confirmar",
+      "duplicates": "Cafés que ya existen",
+      "duplicatesSkip": "Omitirlos",
+      "duplicatesUpdate": "Actualizarlos con el CSV",
+      "validRows": "{count, plural, one {# fila lista} other {# filas listas}}",
+      "invalidRows": "{count, plural, one {# fila con error} other {# filas con error}}",
+      "rowLabel": "Fila {row}",
+      "confirm": "Importar {count, plural, one {# café} other {# cafés}}",
+      "importing": "Importando…",
+      "startOver": "Empezar de nuevo",
+      "result": "Listo: {inserted} nuevos, {updated} actualizados, {skipped} omitidos.",
+      "noValidRows": "Ninguna fila del archivo se puede importar.",
+      "columnsTitle": "Columnas del CSV",
+      "errors": {
+        "empty": "El archivo no tiene filas.",
+        "parse": "No pudimos leer el archivo. ¿Es un CSV válido?",
+        "tooLarge": "El archivo supera los 2 MB.",
+        "required": "«{field}» es obligatorio.",
+        "invalidKind": "Tipo desconocido. Usa «single origin» o «mezcla».",
+        "invalidRoast": "Nivel de tueste desconocido.",
+        "invalidProcess": "Procesamiento desconocido.",
+        "invalidScale": "«{field}» debe ser un número del 1 al 5.",
+        "unknownCountry": "País desconocido: «{value}».",
+        "noCountry": "Falta al menos un país de origen.",
+        "duplicateInFile": "El archivo repite este café.",
+        "singleOriginOneCountry": "Un single origin lleva un solo país. Usa «mezcla» si son varios."
+      }
+    }
+  },
+  "admin": {
+    "title": "Usuarios",
+    "subtitle": "{count, plural, one {# persona en el equipo} other {# personas en el equipo}}",
+    "invite": "Invitar",
+    "inviteTitle": "Invitar a alguien",
+    "inviteSent": "Invitación enviada.",
+    "emailLabel": "Correo",
+    "roleLabel": "Rol",
+    "you": "tú",
+    "never": "Sin entrar todavía",
+    "roles": {
+      "admin": "Admin",
+      "editor": "Editor",
+      "viewer": "Viewer"
+    },
+    "roleHelp": {
+      "admin": "Todo, incluida la gestión de usuarios y el borrado de cafés.",
+      "editor": "Crea, edita e importa Biblioteca y Academy. No borra cafés.",
+      "viewer": "Sólo lectura."
+    },
+    "errors": {
+      "invalidEmail": "Escribe un correo válido.",
+      "invalidRole": "Rol no válido.",
+      "cannotDemoteSelf": "No puedes quitarte a ti mismo el rol de admin.",
+      "invitedButRoleFailed": "Se envió la invitación, pero no pudimos asignar el rol. Cámbialo desde la lista."
+    }
+  },
+  "common": {
+    "saving": "Guardando…",
+    "cancel": "Cancelar",
+    "close": "Cerrar",
+    "retry": "Reintentar",
+    "genericError": "Algo salió mal. Inténtalo otra vez.",
+    "notFoundTitle": "No encontramos esta página",
+    "notFoundBody": "El enlace puede estar roto o el contenido ya no existe."
+  }
+}
