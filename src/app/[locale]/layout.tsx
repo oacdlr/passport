@@ -38,7 +38,11 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
       className={`${fraunces.variable} ${workSans.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col">
+      {/* suppressHydrationWarning sólo cubre un nivel, así que hay que repetirlo
+          en <body>: las extensiones del navegador (Grammarly y compañía) le
+          inyectan atributos antes de que React hidrate y eso disparaba un
+          aviso de mismatch que no venía de nuestro código. */}
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>
