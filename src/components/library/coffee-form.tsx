@@ -1,13 +1,12 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useActionState, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Field, Input, Select, Textarea, inputClass } from "@/components/ui/field";
 import { Slider } from "@/components/ui/slider";
 import { TagInput } from "@/components/ui/tag-input";
-import { countryOptions } from "@/lib/countries";
 import { COFFEE_KINDS, PROCESS_METHODS, ROAST_LEVELS } from "@/features/library/schema";
 import {
   createCoffee,
@@ -53,10 +52,23 @@ function toExtraPairs(coffee?: CoffeeListItem): { key: string; value: string }[]
   }));
 }
 
-export function CoffeeForm({ coffee, photoUrl }: { coffee?: CoffeeListItem; photoUrl?: string | null }) {
+export function CoffeeForm({
+  coffee,
+  photoUrl,
+  countries,
+}: {
+  coffee?: CoffeeListItem;
+  photoUrl?: string | null;
+  /**
+   * Ya ordenados en el servidor. No se calculan aquí a propósito: Node y el
+   * navegador no ordenan igual con `localeCompare` (distinta versión de ICU),
+   * y eso hacía que el <select> saliera en un orden en el servidor y en otro
+   * en el cliente — un mismatch de hidratación que tiraba el formulario entero.
+   */
+  countries: { code: string; name: string }[];
+}) {
   const t = useTranslations("library");
   const tCommon = useTranslations("common");
-  const locale = useLocale();
 
   const isEdit = Boolean(coffee);
   const action = isEdit ? updateCoffee : createCoffee;
@@ -69,8 +81,6 @@ export function CoffeeForm({ coffee, photoUrl }: { coffee?: CoffeeListItem; phot
   const [notes, setNotes] = useState<string[]>(coffee?.tasting_notes ?? []);
   const [flavors, setFlavors] = useState<string[]>(coffee?.complementary_flavors ?? []);
   const [extraPairs, setExtraPairs] = useState(() => toExtraPairs(coffee));
-
-  const countries = useMemo(() => countryOptions(locale), [locale]);
 
   // Un single origin es, por definición, un solo origen.
   const visibleOrigins = kind === "single_origin" ? origins.slice(0, 1) : origins;

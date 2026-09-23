@@ -4,6 +4,7 @@ import { cache } from "react";
 import { createClient } from "@/lib/supabase/server";
 import { resolveCountryCode } from "@/lib/countries";
 import { COFFEE_KINDS, PROCESS_METHODS, ROAST_LEVELS } from "./schema";
+import { PREVIEW_COFFEES, isPreviewMode } from "@/lib/preview";
 import type { CoffeeKind, CoffeeListItem, CoffeeOrigin, ProcessMethod, RoastLevel } from "@/types/database";
 
 export type LibraryFilters = {
@@ -28,6 +29,9 @@ function sanitizeForOr(value: string): string {
 }
 
 export async function listCoffees(filters: LibraryFilters): Promise<CoffeeListItem[]> {
+  // ⚠️ PREVIEW: filtra en memoria. Borrar con src/lib/preview.ts.
+  if (isPreviewMode()) return filterPreview(filters);
+
   const supabase = await createClient();
 
   let query = supabase
@@ -61,6 +65,8 @@ export async function listCoffees(filters: LibraryFilters): Promise<CoffeeListIt
 }
 
 export async function countCoffees(): Promise<number> {
+  if (isPreviewMode()) return PREVIEW_COFFEES.length;
+
   const supabase = await createClient();
   const { count, error } = await supabase
     .from("coffees")
@@ -70,6 +76,8 @@ export async function countCoffees(): Promise<number> {
 }
 
 export const getCoffeeBySlug = cache(async (slug: string) => {
+  if (isPreviewMode()) return PREVIEW_COFFEES.find((c) => c.slug === slug) ?? null;
+
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("coffees_with_origins")
@@ -83,6 +91,8 @@ export const getCoffeeBySlug = cache(async (slug: string) => {
 
 /** Códigos de país presentes en la Biblioteca, para poblar el filtro de Origen. */
 export async function listUsedCountryCodes(): Promise<string[]> {
+  if (isPreviewMode()) return [...new Set(PREVIEW_COFFEES.flatMap((c) => c.country_codes))];
+
   const supabase = await createClient();
   const { data, error } = await supabase.from("coffee_origins").select("country_code");
   if (error || !data) return [];
@@ -95,6 +105,7 @@ export async function listUsedCountryCodes(): Promise<string[]> {
  */
 export async function signedPhotoUrl(path: string | null, expiresIn = 3600) {
   if (!path) return null;
+  if (isPreviewMode()) return null;
   const supabase = await createClient();
   const { data } = await supabase.storage.from("coffee-photos").createSignedUrl(path, expiresIn);
   return data?.signedUrl ?? null;
@@ -102,4 +113,25 @@ export async function signedPhotoUrl(path: string | null, expiresIn = 3600) {
 
 export function originsOf(coffee: CoffeeListItem): CoffeeOrigin[] {
   return Array.isArray(coffee.origins) ? coffee.origins : [];
+}
+
+/** ⚠️ PREVIEW: reproduce en memoria los filtros que normalmente hace Postgres. */
+function filterPreview(filters: LibraryFilters): CoffeeListItem[] {
+  const needle = filters.q?.trim().toLowerCase() ?? "";
+  const code = needle ? resolveCountryCode(needle) : null;
+
+  return PREVIEW_COFFEES.filter((coffee) => {
+    if (filters.kind && coffee.kind !== filters.kind) return false;
+    if (filters.roast && coffee.roast !== filters.roast) return false;
+    if (filters.process && coffee.process !== filters.process) return false;
+    if (filters.country && !coffee.country_codes.includes(filters.country)) return false;
+
+    if (!needle) return true;
+    return (
+      coffee.name.toLowerCase().includes(needle) ||
+      (coffee.story ?? "").toLowerCase().includes(needle) ||
+      coffee.origins_search.toLowerCase().includes(needle) ||
+      (code !== null && coffee.country_codes.includes(code))
+    );
+  });
 }

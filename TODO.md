@@ -138,6 +138,7 @@ Una vez haya base, la lista de comprobaciones está en
 
 | Qué | Por qué importa | Dónde |
 |---|---|---|
+| 🔴 **Modo preview (andamio)** | Salta el login y sirve datos falsos. Está doblemente capado (nunca en producción + `PREVIEW_MODE=1`), pero **hay que borrarlo** en cuanto la base funcione | `src/lib/preview.ts` — borrar el archivo y seguir los errores de compilación |
 | `database.ts` escrito a mano | Puede desincronizarse del esquema real | Se arregla con `npm run db:types` en cuanto haya base enlazada |
 | Tests sólo del import | El resto (guards, queries, acciones) se verifica a mano | `src/features/library/import/*.test.ts` es el patrón a seguir |
 | Rol en cada request | `is_admin()` consulta `profiles` en cada policy | A esta escala da igual; si molesta, custom access token hook |

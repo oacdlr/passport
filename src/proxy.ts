@@ -3,6 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { publicEnv } from "@/lib/env";
 import { defaultLocale, isLocale, routing } from "@/lib/i18n/routing";
+import { isPreviewMode } from "@/lib/preview";
 
 const handleI18nRouting = createIntlMiddleware(routing);
 
@@ -22,6 +23,11 @@ export async function proxy(request: NextRequest) {
   //    se devuelve ya: la siguiente petición pasa por el guard de auth.
   const response = handleI18nRouting(request);
   if (response.headers.get("location")) {
+    return response;
+  }
+
+  // ⚠️ PREVIEW: sin sesión ni base de datos. Borrar con src/lib/preview.ts.
+  if (isPreviewMode()) {
     return response;
   }
 

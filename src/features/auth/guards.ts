@@ -4,6 +4,7 @@ import { cache } from "react";
 import { redirect } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
+import { PREVIEW_PROFILE, isPreviewMode } from "@/lib/preview";
 import type { AppRole, Profile } from "@/types/database";
 
 export type SessionUser = {
@@ -18,6 +19,11 @@ export type SessionUser = {
  * layout y desde la página no cuesta dos queries.
  */
 export const getSessionUser = cache(async (): Promise<SessionUser | null> => {
+  // ⚠️ PREVIEW: usuario de mentira con rol admin. Borrar con src/lib/preview.ts.
+  if (isPreviewMode()) {
+    return { id: PREVIEW_PROFILE.id, email: PREVIEW_PROFILE.email, profile: PREVIEW_PROFILE };
+  }
+
   const supabase = await createClient();
 
   const {

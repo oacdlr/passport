@@ -5,6 +5,7 @@ import { InviteUserForm } from "@/components/layout/invite-user-form";
 import { RoleSelect } from "@/components/layout/role-select";
 import { requireRole } from "@/features/auth/guards";
 import { createClient } from "@/lib/supabase/server";
+import { PREVIEW_TEAM, isPreviewMode } from "@/lib/preview";
 import { initials } from "@/lib/utils";
 
 export default async function UsersPage({ params }: PageProps<"/[locale]/admin/usuarios">) {
@@ -14,13 +15,16 @@ export default async function UsersPage({ params }: PageProps<"/[locale]/admin/u
   const admin = await requireRole("admin");
   const t = await getTranslations("admin");
 
-  const supabase = await createClient();
-  const { data: profiles } = await supabase
-    .from("profiles")
-    .select("*")
-    .order("created_at", { ascending: true });
-
-  const people = profiles ?? [];
+  // ⚠️ PREVIEW: equipo de mentira. Borrar con src/lib/preview.ts.
+  let people = PREVIEW_TEAM;
+  if (!isPreviewMode()) {
+    const supabase = await createClient();
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("*")
+      .order("created_at", { ascending: true });
+    people = profiles ?? [];
+  }
 
   return (
     <div className="flex max-w-4xl flex-col gap-8">

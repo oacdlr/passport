@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { CoffeeForm } from "@/components/library/coffee-form";
 import { requireRole } from "@/features/auth/guards";
 import { getCoffeeBySlug, signedPhotoUrl } from "@/features/library/queries";
+import { countryOptions } from "@/lib/countries";
 
 export default async function EditCoffeePage({
   params,
@@ -21,7 +22,7 @@ export default async function EditCoffeePage({
   return (
     <div className="flex flex-col gap-8">
       <h1 className="font-display text-4xl text-bosque">{t("form.editTitle")}</h1>
-      <CoffeeForm coffee={coffee} photoUrl={photoUrl} />
+      <CoffeeForm coffee={coffee} photoUrl={photoUrl} countries={countryOptions(locale)} />
     </div>
   );
 }
