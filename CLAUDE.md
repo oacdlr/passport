@@ -48,7 +48,7 @@ Tipografía: Fraunces (títulos) + Work Sans (cuerpo). Sólo light mode.
 ## Orden del MVP
 
 1. ~~Auth + roles~~ — hecho
-2. ~~Biblioteca (CRUD + import CSV)~~ — hecho. Falta el import de Excel (.xlsx).
+2. ~~Biblioteca (CRUD + import CSV/Excel)~~ — hecho
 3. Degustación + Historial ← siguiente
 4. Selector de idioma + traducción automática — el selector ya está; falta traducir el contenido del equipo (tabla `content_translations` + adaptador de Gemini).
 5. Drafts (copiloto de IA)

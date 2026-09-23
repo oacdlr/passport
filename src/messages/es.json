@@ -123,9 +123,9 @@
     },
     "import": {
       "title": "Importar cafés",
-      "subtitle": "Sube un CSV y revisa el resultado antes de guardar nada.",
+      "subtitle": "Sube un CSV o un Excel y revisa el resultado antes de guardar nada.",
       "downloadTemplate": "Descargar plantilla CSV",
-      "chooseFile": "Elegir archivo CSV",
+      "chooseFile": "Elegir archivo",
       "step1": "1. Subir",
       "step2": "2. Revisar",
       "step3": "3. Confirmar",
@@ -140,7 +140,7 @@
       "startOver": "Empezar de nuevo",
       "result": "Listo: {inserted} nuevos, {updated} actualizados, {skipped} omitidos.",
       "noValidRows": "Ninguna fila del archivo se puede importar.",
-      "columnsTitle": "Columnas del CSV",
+      "columnsTitle": "Columnas aceptadas",
       "errors": {
         "empty": "El archivo no tiene filas.",
         "parse": "No pudimos leer el archivo. ¿Es un CSV válido?",
@@ -153,8 +153,11 @@
         "unknownCountry": "País desconocido: «{value}».",
         "noCountry": "Falta al menos un país de origen.",
         "duplicateInFile": "El archivo repite este café.",
-        "singleOriginOneCountry": "Un single origin lleva un solo país. Usa «mezcla» si son varios."
-      }
+        "singleOriginOneCountry": "Un single origin lleva un solo país. Usa «mezcla» si son varios.",
+        "unsupportedFormat": "Formato no soportado. Usa un archivo .csv o .xlsx.",
+        "database": "La base de datos rechazó el import: {value}"
+      },
+      "goToLibrary": "Ir a Biblioteca"
     }
   },
   "admin": {

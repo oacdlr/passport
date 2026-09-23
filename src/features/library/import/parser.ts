@@ -1,4 +1,3 @@
-import Papa from "papaparse";
 import { resolveCountryCode } from "@/lib/countries";
 import { slugify } from "@/lib/utils";
 import {
@@ -7,14 +6,14 @@ import {
   ROAST_LEVELS,
   coffeeInputSchema,
   type CoffeeInput,
-} from "./schema";
+} from "../schema";
 
 /**
- * Import de Biblioteca desde CSV.
+ * Núcleo del import de Biblioteca, agnóstico al formato del archivo.
  *
- * El parseo del formato vive aparte de la conversión a filas: cuando se añada
- * Excel (milestone 2.5) sólo hay que producir `RawRow[]` con SheetJS y
- * reutilizar `buildRow` tal cual.
+ * Los lectores (`readers.ts`) se encargan de convertir un CSV o un XLSX en
+ * `RawRow[]`; a partir de ahí CSV y Excel recorren exactamente el mismo camino,
+ * así que las reglas de negocio no pueden divergir entre formatos.
  */
 
 export type ImportError = { key: string; values?: Record<string, string> };
@@ -34,7 +33,7 @@ export type ImportPreview = {
 };
 
 /** Encabezados aceptados, en español y en inglés. */
-const COLUMN_ALIASES: Record<string, string[]> = {
+export const COLUMN_ALIASES: Record<string, string[]> = {
   name: ["nombre", "name", "cafe", "café", "coffee"],
   kind: ["tipo", "kind", "type"],
   countries: ["paises", "países", "pais", "país", "countries", "country", "origen", "origin"],
@@ -105,66 +104,7 @@ const PROCESS_ALIASES: Record<string, (typeof PROCESS_METHODS)[number]> = {
   other: "other",
 };
 
-export const CSV_TEMPLATE_HEADERS = [
-  "nombre",
-  "tipo",
-  "paises",
-  "regiones",
-  "productores",
-  "fincas",
-  "altitudes",
-  "tueste",
-  "proceso",
-  "cuerpo",
-  "acidez",
-  "historia",
-  "notas_cata",
-  "sabores_complementarios",
-  "extra",
-];
-
-/** Plantilla descargable: dos filas de ejemplo, una single origin y una mezcla. */
-export const CSV_TEMPLATE = Papa.unparse({
-  fields: CSV_TEMPLATE_HEADERS,
-  data: [
-    [
-      "Finca La Esperanza",
-      "single origin",
-      "Colombia",
-      "Huila",
-      "Familia Restrepo",
-      "El Mirador",
-      "1750",
-      "medio",
-      "lavado",
-      "3",
-      "5",
-      "Cultivado a 1.750 msnm en Huila.",
-      "cítrico|jazmín|chocolate",
-      "chocolate 70%|queso de cabra",
-      "variedad: Caturra; lote: 2026-04",
-    ],
-    [
-      "Casa Blend No. 4",
-      "mezcla",
-      "Brasil|Guatemala",
-      "Cerrado|Antigua",
-      "",
-      "",
-      "",
-      "medio-oscuro",
-      "natural",
-      "4",
-      "2",
-      "Mezcla de casa para espresso.",
-      "nuez|caramelo",
-      "leche entera",
-      "uso: espresso",
-    ],
-  ],
-});
-
-function normalizeHeader(header: string): string {
+export function normalizeHeader(header: string): string {
   const cleaned = header.trim().toLowerCase();
   for (const [canonical, aliases] of Object.entries(COLUMN_ALIASES)) {
     if (aliases.includes(cleaned)) return canonical;
@@ -216,9 +156,9 @@ function lookup<T extends string>(
   return table[value] ?? "invalid";
 }
 
-type RawRow = Record<string, string>;
+export type RawRow = Record<string, string>;
 
-function buildRow(raw: RawRow, rowNumber: number, knownColumns: Set<string>): ImportRow {
+export function buildRow(raw: RawRow, rowNumber: number, knownColumns: Set<string>): ImportRow {
   const errors: ImportError[] = [];
   const name = (raw.name ?? "").trim();
 
@@ -311,21 +251,17 @@ function buildRow(raw: RawRow, rowNumber: number, knownColumns: Set<string>): Im
   };
 }
 
-export function parseCoffeeCsv(text: string): { preview?: ImportPreview; error?: ImportError } {
-  const result = Papa.parse<RawRow>(text, {
-    header: true,
-    skipEmptyLines: "greedy",
-    transformHeader: normalizeHeader,
-  });
-
-  if (result.data.length === 0) {
-    return { error: { key: result.errors.length > 0 ? "parse" : "empty" } };
-  }
-
+/**
+ * Convierte filas ya leídas del archivo en el preview del wizard.
+ *
+ * Punto de encuentro de CSV y Excel: los dos formatos llegan aquí como
+ * `RawRow[]` y de aquí en adelante se comportan igual.
+ */
+export function rowsToPreview(rows: RawRow[]): ImportPreview {
   const knownColumns = new Set(Object.keys(COLUMN_ALIASES));
   const seenSlugs = new Set<string>();
 
-  const rows = result.data.map((raw, index) => {
+  const built = rows.map((raw, index) => {
     // +2: la fila 1 es el encabezado y las hojas de cálculo cuentan desde 1.
     const row = buildRow(raw, index + 2, knownColumns);
     if (row.slug) {
@@ -340,10 +276,8 @@ export function parseCoffeeCsv(text: string): { preview?: ImportPreview; error?:
   });
 
   return {
-    preview: {
-      rows,
-      validCount: rows.filter((row) => row.data !== null).length,
-      invalidCount: rows.filter((row) => row.data === null).length,
-    },
+    rows: built,
+    validCount: built.filter((row) => row.data !== null).length,
+    invalidCount: built.filter((row) => row.data === null).length,
   };
 }

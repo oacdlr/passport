@@ -4,10 +4,11 @@ import { revalidatePath } from "next/cache";
 import { getLocale } from "next-intl/server";
 import { createClient } from "@/lib/supabase/server";
 import { requireRole } from "@/features/auth/guards";
-import { parseCoffeeCsv, type ImportError, type ImportPreview } from "./csv";
+import { parseSpreadsheet } from "./import/server";
+import type { ImportError, ImportPreview } from "./import";
 import type { Json } from "@/types/database";
 
-const MAX_CSV_BYTES = 2 * 1024 * 1024;
+const MAX_UPLOAD_BYTES = 2 * 1024 * 1024;
 
 export type AnalyzeResult = { preview?: ImportPreview; error?: ImportError };
 export type ImportResult = {
@@ -15,27 +16,35 @@ export type ImportResult = {
   result?: { inserted: number; updated: number; skipped: number };
 };
 
-/** Paso 2 del wizard: sólo analiza. No escribe nada en la base. */
-export async function analyzeCsv(text: string): Promise<AnalyzeResult> {
-  await requireRole("admin", "editor");
+/** Lee el archivo del FormData y lo valida. No escribe nada en la base. */
+async function previewFrom(formData: FormData): Promise<AnalyzeResult> {
+  const file = formData.get("file");
+  if (!(file instanceof File)) return { error: { key: "parse" } };
+  if (file.size === 0) return { error: { key: "empty" } };
+  if (file.size > MAX_UPLOAD_BYTES) return { error: { key: "tooLarge" } };
 
-  if (text.length > MAX_CSV_BYTES) return { error: { key: "tooLarge" } };
-  return parseCoffeeCsv(text);
+  return parseSpreadsheet(file.name, await file.arrayBuffer());
+}
+
+/** Paso 2 del wizard: sólo analiza. */
+export async function analyzeSpreadsheet(formData: FormData): Promise<AnalyzeResult> {
+  await requireRole("admin", "editor");
+  return previewFrom(formData);
 }
 
 /**
  * Paso 3: importa de verdad.
  *
- * Se vuelve a parsear el CSV en el servidor en lugar de confiar en las filas
+ * Se vuelve a leer el archivo en el servidor en lugar de confiar en las filas
  * que manda el cliente: el preview es ayuda visual, no una fuente de verdad.
  */
-export async function importCsv(text: string, mode: "skip" | "update"): Promise<ImportResult> {
+export async function importSpreadsheet(formData: FormData): Promise<ImportResult> {
   await requireRole("admin", "editor");
   const locale = await getLocale();
 
-  if (text.length > MAX_CSV_BYTES) return { error: { key: "tooLarge" } };
+  const mode = formData.get("mode") === "update" ? "update" : "skip";
 
-  const { preview, error } = parseCoffeeCsv(text);
+  const { preview, error } = await previewFrom(formData);
   if (error) return { error };
   if (!preview || preview.validCount === 0) return { error: { key: "noValidRows" } };
 
@@ -72,7 +81,7 @@ export async function importCsv(text: string, mode: "skip" | "update"): Promise<
     mode,
   });
 
-  if (rpcError) return { error: { key: "parse", values: { value: rpcError.message } } };
+  if (rpcError) return { error: { key: "database", values: { value: rpcError.message } } };
 
   revalidatePath(`/${locale}/biblioteca`);
   return { result: data as unknown as { inserted: number; updated: number; skipped: number } };

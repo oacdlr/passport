@@ -15,7 +15,7 @@ App web del equipo de baristas: catálogo de cafés (Biblioteca), degustaciones,
 
 - Login por magic link, sólo por invitación (equipo cerrado).
 - Roles **admin / editor / viewer** con Row Level Security en Postgres.
-- Biblioteca: listado con búsqueda y filtros, ficha, alta, edición, borrado e import CSV.
+- Biblioteca: listado con búsqueda y filtros, ficha, alta, edición, borrado e import CSV/Excel.
 - Gestión de usuarios para admin.
 - Rutas `/es` y `/en` con la interfaz traducida.
 
@@ -97,6 +97,7 @@ npm run dev     # http://localhost:3000 -> redirige a /es/biblioteca
 | `npm run build` | Build de producción. |
 | `npm run typecheck` | `tsc --noEmit`. |
 | `npm run lint` | ESLint. |
+| `npm run test` | Tests del import (Vitest). |
 | `npm run db:push` | Aplica las migraciones al proyecto enlazado. |
 | `npm run db:types` | Regenera `src/types/database.ts` desde el esquema real. |
 
@@ -116,11 +117,11 @@ Dos decisiones que conviene conocer antes de tocar nada:
 - **Los permisos viven en la base de datos.** `supabase/migrations/0003_rls.sql` es lo que realmente decide quién puede qué. Los helpers de `src/features/auth/guards.ts` (`requireRole`, `canEditLibrary`) sólo evitan enseñar botones que van a fallar. Si añades una tabla, escribe su RLS en la misma migración.
 - **Los países se guardan en ISO 3166-1 alpha-2**, no por nombre. `Intl.DisplayNames` los traduce a ES/EN gratis, sin pasar por el traductor automático.
 
-## Import CSV
+## Import de cafés
 
-Desde `/es/biblioteca/importar`, en tres pasos: subir → revisar → confirmar. El preview marca fila por fila qué falla y por qué, sin bloquear el resto del lote, y deja elegir si los cafés que ya existen se omiten o se actualizan.
+Desde `/es/biblioteca/importar`, en tres pasos: subir → revisar → confirmar. Acepta **.csv y .xlsx**; los dos formatos comparten las mismas reglas de validación. El preview marca fila por fila qué falla y por qué, sin bloquear el resto del lote, y deja elegir si los cafés que ya existen se omiten o se actualizan.
 
-Hay una plantilla descargable en esa misma pantalla. Columnas (también se aceptan los nombres en inglés):
+Hay una plantilla CSV descargable en esa misma pantalla. Columnas (también se aceptan los nombres en inglés, y en Excel valen igual):
 
 ```
 nombre, tipo, paises, regiones, productores, fincas, altitudes,

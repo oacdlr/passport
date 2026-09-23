@@ -75,6 +75,7 @@ Una vez haya base, la lista de comprobaciones está en
 - [x] Borrado sólo admin, con confirmación
 - [x] Subida de foto a bucket privado + signed URLs
 - [x] Import CSV: subir → revisar → confirmar, con errores por fila
+- [x] Import Excel (.xlsx), por el mismo camino que el CSV
 - [x] Plantilla CSV descargable
 
 ### i18n
@@ -87,7 +88,7 @@ Una vez haya base, la lista de comprobaciones está en
 - [x] `npm run typecheck` limpio
 - [x] `npm run lint` limpio
 - [x] `npm run build` compila; rutas autenticadas son dinámicas
-- [x] Parser CSV probado con 5 escenarios (plantilla, filas rotas, encabezados en inglés, duplicados, single origin con dos países)
+- [x] **34 tests del import** (Vitest): reglas de negocio, países, encabezados, duplicados, y paridad CSV ↔ Excel
 - [x] Smoke test de rutas: `/` → `/es`, ruta protegida → login, ambos idiomas renderizan
 - [ ] **Matriz de RLS con tres cuentas reales** ← bloqueador
 - [ ] Import CSV contra base real (17 de 20 filas, luego modo omitir → 0)
@@ -137,9 +138,8 @@ Una vez haya base, la lista de comprobaciones está en
 
 | Qué | Por qué importa | Dónde |
 |---|---|---|
-| Import de Excel (.xlsx) | El spec pide CSV **y** Excel; sólo hay CSV | `src/features/library/csv.ts` — el parser ya está separado para enchufar SheetJS |
 | `database.ts` escrito a mano | Puede desincronizarse del esquema real | Se arregla con `npm run db:types` en cuanto haya base enlazada |
-| Sin tests automatizados | Todo se verifica a mano | El parser CSV es el primer candidato |
+| Tests sólo del import | El resto (guards, queries, acciones) se verifica a mano | `src/features/library/import/*.test.ts` es el patrón a seguir |
 | Rol en cada request | `is_admin()` consulta `profiles` en cada policy | A esta escala da igual; si molesta, custom access token hook |
 | Sin deploy | El equipo todavía no puede probarlo | Vercel + las mismas variables de `.env.example` |
 

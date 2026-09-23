@@ -123,9 +123,9 @@
     },
     "import": {
       "title": "Import coffees",
-      "subtitle": "Upload a CSV and review the result before anything is saved.",
+      "subtitle": "Upload a CSV or Excel file and review the result before anything is saved.",
       "downloadTemplate": "Download CSV template",
-      "chooseFile": "Choose CSV file",
+      "chooseFile": "Choose file",
       "step1": "1. Upload",
       "step2": "2. Review",
       "step3": "3. Confirm",
@@ -140,7 +140,7 @@
       "startOver": "Start over",
       "result": "Done: {inserted} new, {updated} updated, {skipped} skipped.",
       "noValidRows": "No row in this file can be imported.",
-      "columnsTitle": "CSV columns",
+      "columnsTitle": "Accepted columns",
       "errors": {
         "empty": "The file has no rows.",
         "parse": "We couldn't read the file. Is it a valid CSV?",
@@ -153,8 +153,11 @@
         "unknownCountry": "Unknown country: “{value}”.",
         "noCountry": "At least one origin country is required.",
         "duplicateInFile": "This coffee is repeated in the file.",
-        "singleOriginOneCountry": "A single origin has exactly one country. Use “blend” for more than one."
-      }
+        "singleOriginOneCountry": "A single origin has exactly one country. Use “blend” for more than one.",
+        "unsupportedFormat": "Unsupported format. Use a .csv or .xlsx file.",
+        "database": "The database rejected the import: {value}"
+      },
+      "goToLibrary": "Go to Library"
     }
   },
   "admin": {

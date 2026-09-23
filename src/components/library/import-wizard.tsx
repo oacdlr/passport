@@ -5,8 +5,15 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/lib/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardBody } from "@/components/ui/card";
-import { analyzeCsv, importCsv } from "@/features/library/import-actions";
-import { CSV_TEMPLATE, CSV_TEMPLATE_HEADERS, type ImportError, type ImportPreview } from "@/features/library/csv";
+import { analyzeSpreadsheet, importSpreadsheet } from "@/features/library/import-actions";
+import {
+  CSV_TEMPLATE,
+  CSV_TEMPLATE_HEADERS,
+  SPREADSHEET_ACCEPT,
+  kindFromFilename,
+  type ImportError,
+  type ImportPreview,
+} from "@/features/library/import";
 import { cn } from "@/lib/utils";
 
 const MAX_BYTES = 2 * 1024 * 1024;
@@ -15,7 +22,7 @@ export function ImportWizard() {
   const t = useTranslations("library.import");
   const router = useRouter();
 
-  const [csv, setCsv] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<ImportPreview | null>(null);
   const [error, setError] = useState<ImportError | null>(null);
   const [mode, setMode] = useState<"skip" | "update">("skip");
@@ -29,30 +36,37 @@ export function ImportWizard() {
     return t(`errors.${importError.key}` as never, importError.values as never);
   }
 
-  async function handleFile(file: File) {
+  function handleFile(picked: File) {
     setError(null);
     setPreview(null);
     setResult(null);
+    setFile(picked);
 
-    if (file.size > MAX_BYTES) {
+    if (!kindFromFilename(picked.name)) {
+      setError({ key: "unsupportedFormat" });
+      return;
+    }
+    if (picked.size > MAX_BYTES) {
       setError({ key: "tooLarge" });
       return;
     }
 
-    const text = await file.text();
-    setCsv(text);
-
     startTransition(async () => {
-      const analysis = await analyzeCsv(text);
+      const formData = new FormData();
+      formData.set("file", picked);
+      const analysis = await analyzeSpreadsheet(formData);
       if (analysis.error) setError(analysis.error);
       else setPreview(analysis.preview ?? null);
     });
   }
 
   function handleImport() {
-    if (!csv) return;
+    if (!file) return;
     startTransition(async () => {
-      const outcome = await importCsv(csv, mode);
+      const formData = new FormData();
+      formData.set("file", file);
+      formData.set("mode", mode);
+      const outcome = await importSpreadsheet(formData);
       if (outcome.error) setError(outcome.error);
       else {
         setResult(outcome.result ?? null);
@@ -62,7 +76,7 @@ export function ImportWizard() {
   }
 
   function reset() {
-    setCsv(null);
+    setFile(null);
     setPreview(null);
     setError(null);
     setResult(null);
@@ -76,7 +90,7 @@ export function ImportWizard() {
         <CardBody className="flex flex-col items-start gap-4">
           <p className="text-sm text-tinta">{t("result", result)}</p>
           <div className="flex gap-3">
-            <Button onClick={() => router.push("/biblioteca")}>{t("step3")}</Button>
+            <Button onClick={() => router.push("/biblioteca")}>{t("goToLibrary")}</Button>
             <Button variant="secondary" onClick={reset}>
               {t("startOver")}
             </Button>
@@ -99,11 +113,11 @@ export function ImportWizard() {
               </span>
               <input
                 type="file"
-                accept=".csv,text/csv"
+                accept={SPREADSHEET_ACCEPT}
                 className="sr-only"
                 onChange={(event) => {
-                  const file = event.target.files?.[0];
-                  if (file) void handleFile(file);
+                  const picked = event.target.files?.[0];
+                  if (picked) handleFile(picked);
                 }}
               />
             </label>
@@ -117,11 +131,15 @@ export function ImportWizard() {
             </a>
           </div>
 
+          {file && !error && (
+            <p className="text-sm text-tinta-suave">
+              {file.name} · {(file.size / 1024).toFixed(0)} KB
+            </p>
+          )}
+
           <details className="text-sm text-tinta-suave">
             <summary className="cursor-pointer">{t("columnsTitle")}</summary>
-            <p className="mt-2 font-mono text-xs break-words">
-              {CSV_TEMPLATE_HEADERS.join(", ")}
-            </p>
+            <p className="mt-2 font-mono text-xs break-words">{CSV_TEMPLATE_HEADERS.join(", ")}</p>
           </details>
 
           {error && (
@@ -154,9 +172,7 @@ export function ImportWizard() {
                   key={row.row}
                   className={cn(
                     "rounded-xl border px-4 py-3 text-sm",
-                    row.data
-                      ? "border-borde bg-white"
-                      : "border-terracota/40 bg-terracota/5",
+                    row.data ? "border-borde bg-white" : "border-terracota/40 bg-terracota/5",
                   )}
                 >
                   <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -197,11 +213,7 @@ export function ImportWizard() {
             </fieldset>
 
             <div className="flex flex-wrap gap-3">
-              <Button
-                onClick={handleImport}
-                disabled={pending || preview.validCount === 0}
-                size="lg"
-              >
+              <Button onClick={handleImport} disabled={pending || preview.validCount === 0} size="lg">
                 {pending ? t("importing") : t("confirm", { count: preview.validCount })}
               </Button>
               <Button variant="secondary" size="lg" onClick={reset} disabled={pending}>
@@ -209,9 +221,7 @@ export function ImportWizard() {
               </Button>
             </div>
 
-            {preview.validCount === 0 && (
-              <p className="text-sm text-terracota">{t("noValidRows")}</p>
-            )}
+            {preview.validCount === 0 && <p className="text-sm text-terracota">{t("noValidRows")}</p>}
           </CardBody>
         </Card>
       )}

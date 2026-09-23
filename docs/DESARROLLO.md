@@ -75,7 +75,7 @@ src/app/auth/callback/ Fuera de [locale]: la URL la construye Supabase, no el ro
 src/features/          Lógica por dominio. Se reutiliza entre pantallas.
   auth/      guards.ts (quién eres) · actions.ts (login, invitar, cambiar rol)
   library/   queries.ts (lecturas) · actions.ts (CRUD) · schema.ts (Zod) ·
-             csv.ts (parser) · import-actions.ts (RPC)
+             import-actions.ts (RPC) · import/ (ver abajo)
 
 src/components/
   ui/        Primitivas sin lógica de negocio
@@ -120,6 +120,13 @@ export async function algo(_prev: State, formData: FormData): Promise<State> {
 las dos entradas, así que las reglas de negocio (cuerpo 1–5, un single origin lleva un país)
 no pueden divergir entre pantallas.
 
+**El import está partido por capas, no por formato.** `import/readers.ts` convierte CSV o
+XLSX en `RawRow[]`; de ahí en adelante `import/parser.ts` los trata igual. Así las reglas de
+negocio no pueden divergir entre formatos, y los tests lo comprueban explícitamente. Ojo con
+la frontera cliente/servidor: `import/index.ts` es la superficie segura para el navegador y
+`import/server.ts` la que arrastra Node (`fs`); mezclarlas rompe el build con un
+`Can't resolve 'fs'`.
+
 **El estado de los filtros vive en la URL**, no en `useState`. Así un filtro se puede pegar en
 un chat y sobrevive a recargar.
 
@@ -141,7 +148,7 @@ optimizador no puede cachear una URL que expira.
 6. `src/components/library/coffee-form.tsx` — el control.
 7. Ficha y/o tarjeta, si se muestra.
 8. `src/messages/es.json` **y** `en.json`.
-9. Si tiene que llegar por CSV: alias de columna en `csv.ts` y la columna en `CSV_TEMPLATE`.
+9. Si tiene que llegar por CSV/Excel: alias de columna en `import/parser.ts` y la columna en `import/template.ts`.
 
 ### Una pantalla nueva protegida
 
@@ -180,8 +187,13 @@ sigue hablando sólo con las interfaces.
 ### Rápido, sin base de datos
 
 ```bash
-npm run typecheck && npm run lint && npm run build
+npm run typecheck && npm run lint && npm run test && npm run build
 ```
+
+Los 34 tests de `src/features/library/import/` cubren el import entero — reglas de negocio,
+países, encabezados, duplicados y la paridad CSV ↔ Excel — sin tocar la base de datos. Los
+fixtures de Excel se construyen a mano en el propio test (un .xlsx es un zip de XML), para no
+depender de una librería de escritura sólo para probar.
 
 ### Completo, con base de datos *(pendiente — ver `TODO.md`)*
 
