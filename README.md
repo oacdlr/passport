@@ -2,7 +2,12 @@
 
 App web del equipo de baristas: catálogo de cafés (Biblioteca), degustaciones, copiloto de IA para guiones y contenido educativo. Bilingüe ES/EN, pensada para usarse desde el celular en medio de una cata.
 
-Spec completo en [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md). Pantallas de referencia en [`design/`](design/).
+| | |
+|---|---|
+| 📋 **Qué falta y dónde vamos** | [`TODO.md`](TODO.md) |
+| 🛠️ **Cómo está construido** | [`docs/DESARROLLO.md`](docs/DESARROLLO.md) |
+| 📄 Spec de producto | [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md) |
+| 🎨 Pantallas de referencia | [`design/`](design/) |
 
 ## Estado
 

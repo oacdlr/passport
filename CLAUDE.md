@@ -4,9 +4,11 @@ App web tipo "pasaporte de café" para un equipo de baristas (~50 usuarios, máx
 
 ## Documentación
 
+- `TODO.md` — **estado del proyecto**: qué está hecho, qué bloquea y qué sigue. Léelo al empezar y actualízalo al terminar.
+- `docs/DESARROLLO.md` — guía de desarrollo: arquitectura, convenciones, cómo añadir cosas, cómo verificar. Léela antes de tocar código.
 - @docs/REQUIREMENTS.md — spec completo (funcional + propuesta técnica). Leer antes de tomar decisiones de arquitectura.
 - `design/` — capturas de las pantallas de referencia: `biblioteca.png`, `degustacion.png`, `historial.png`, `drafts.png`, `academy.png`.
-- README.md — puesta en marcha, scripts y organización del código.
+- README.md — puesta en marcha y scripts.
 
 ## Identidad visual
 
